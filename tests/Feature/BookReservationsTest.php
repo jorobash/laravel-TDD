@@ -87,6 +87,8 @@ class BookReservationsTest extends TestCase
     /** @test */
     public function a_book_can_be_deleted()
     {
+        $this->withoutExceptionHandling();
+
         $this->post('/books',[
            'title' => 'Title',
            'author' => 'Joro'
@@ -95,7 +97,7 @@ class BookReservationsTest extends TestCase
         $book = Book::first();
         $this->assertCount(1,Book::all());
 
-        $this->delete('/posts/',$book->id);
+        $this->delete('/books/'.$book->id);
 
         $this->assertCount(0,Book::all());
     }
