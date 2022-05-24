@@ -8,17 +8,6 @@ use Tests\TestCase;
 
 class BookReservationsTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-//    public function test_example()
-//    {
-//        $response = $this->get('/');
-//
-//        $response->assertStatus(200);
-//    }
     /** @test */
 
     use RefreshDatabase;
@@ -32,9 +21,13 @@ class BookReservationsTest extends TestCase
             'author' => 'Joro'
         ]);
 
-        $response->assertOk();
+        $book = Book::first();
+
+//        $response->assertOk();
 
         $this->assertCount(1, Book::all());
+
+        $response->assertRedirect($book->path());
     }
 
     /** @test */
@@ -82,6 +75,8 @@ class BookReservationsTest extends TestCase
 
         $this->assertEquals('New Title',Book::first()->title);
         $this->assertEquals('Joro',Book::first()->author);
+
+        $response->assertRedirect($book->fresh()->path());
     }
 
     /** @test */
@@ -97,8 +92,10 @@ class BookReservationsTest extends TestCase
         $book = Book::first();
         $this->assertCount(1,Book::all());
 
-        $this->delete('/books/'.$book->id);
+        $response = $this->delete('/books/'.$book->id);
 
         $this->assertCount(0,Book::all());
+
+        $response->assertRedirect('/books');
     }
 }
